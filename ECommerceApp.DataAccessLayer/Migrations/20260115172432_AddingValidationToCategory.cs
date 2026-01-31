@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿#nullable disable
 
-#nullable disable
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ECommerceApp.Migrations
+namespace ECommerceApp.DataAccessLayer.Migrations
 {
     /// <inheritdoc />
     public partial class AddingValidationToCategory : Migration

@@ -1,11 +1,10 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
-
-#nullable disable
+﻿#nullable disable
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace ECommerceApp.Migrations
+using Microsoft.EntityFrameworkCore.Migrations;
+
+namespace ECommerceApp.DataAccessLayer.Migrations
 {
     /// <inheritdoc />
     public partial class SeedCategoriesData : Migration

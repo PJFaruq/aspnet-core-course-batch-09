@@ -1,16 +1,16 @@
-﻿using ECommerceApp.Data;
-using ECommerceApp.Domain.Entities;
+﻿using ECommerceApp.PresentationLayer.Modules.Categories.Interfaces;
+using ECommerceApp.PresentationLayer.Modules.Categories.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerceApp.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ECommerceDbContext _context;
+        private readonly ICategoryViewModelProvider _categoryViewModelProvider;
 
-        public CategoryController(ECommerceDbContext context)
+        public CategoryController(ICategoryViewModelProvider categoryViewModelProvider)
         {
-            _context = context;
+            _categoryViewModelProvider = categoryViewModelProvider;
         }
 
         //GET: Category/Create
@@ -22,9 +22,9 @@ namespace ECommerceApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Description")] Category category)
+        public async Task<IActionResult> Create(CategoryCreateViewModel category)
         {
-            category.CreatedDate = DateTime.Now;
+
 
             //Server side validation
             if (!ModelState.IsValid)
@@ -32,14 +32,15 @@ namespace ECommerceApp.Controllers
                 return View();
             }
 
-            Category category1 = _context.Categories.FirstOrDefault(m => m.Name == category.Name);
+            var result = await _categoryViewModelProvider.CreateCategoryAsync(category);
 
-            if (category1 == null)
+            if (!result.Success)
             {
-                _context.Categories.Add(category);
-                await _context.SaveChangesAsync();
+                category.ErrorMessage = result.ErrorMessage;
             }
-            return View();
+
+
+            return View(category);
         }
 
         public IActionResult Index()

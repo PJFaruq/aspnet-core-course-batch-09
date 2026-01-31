@@ -1,9 +1,8 @@
-﻿using System;
+﻿#nullable disable
+
 using Microsoft.EntityFrameworkCore.Migrations;
 
-#nullable disable
-
-namespace ECommerceApp.Migrations
+namespace ECommerceApp.DataAccessLayer.Migrations
 {
     /// <inheritdoc />
     public partial class InitialMigration : Migration

@@ -1,0 +1,58 @@
+📁 ECommerceApp.sln (Solution)
+│
+├── 📁 ECommerceApp (Web Project - Main)
+│   ├── 📁 Controllers/
+│   │   ├── CategoryController.cs
+│   │   └── HomeController.cs
+│   ├── 📁 Models/
+│   │   └── ErrorViewModel.cs
+│   ├── 📁 Views/
+│   │   ├── 📁 Category/
+│   │   │   └── Create.cshtml
+│   │   ├── 📁 Home/
+│   │   │   ├── Index.cshtml
+│   │   │   └── Privacy.cshtml
+│   │   └── 📁 Shared/
+│   │       ├── _Layout.cshtml
+│   │       └── Error.cshtml
+│   ├── 📁 wwwroot/
+│   │   ├── 📁 css/
+│   │   ├── 📁 js/
+│   │   └── 📁 lib/
+│   ├── appsettings.json
+│   ├── ECommerceApp.csproj
+│   └── Program.cs
+│
+├── 📁 ECommerceApp.Domain (Domain Layer)
+│   └── 📁 Entities/
+│       ├── Category.cs
+│       ├── Product.cs
+│       ├── Customer.cs
+│       ├── Order.cs
+│       ├── OrderItem.cs
+│       ├── ShoppingCart.cs
+│       ├── Payment.cs
+│       └── Inventory.cs
+│
+├── 📁 ECommerceApp.PresentationLayer
+│   └── 📁 Modules/Categories/
+│       ├── CategoryViewModelProvider.cs
+│       ├── 📁 Interfaces/
+│       │   └── ICategoryViewModelProvider.cs
+│       └── 📁 ViewModels/
+│           └── CategoryCreateViewModel.cs
+│
+├── 📁 ECommerceApp.BusinessLayer
+│   └── 📁 Modules/Categories/
+│       ├── CategoryService.cs
+│       └── 📁 Interfaces/
+│           └── ICategoryService.cs
+│
+└── 📁 ECommerceApp.DataAccessLayer
+    ├── 📁 Data/
+    │   └── ECommerceDbContext.cs
+    └── 📁 Migrations/
+        ├── InitialMigration.cs
+        ├── AddingValidationToCategory.cs
+        ├── SeedCategoriesData.cs
+        └── ECommerceDbContextModelSnapshot.cs

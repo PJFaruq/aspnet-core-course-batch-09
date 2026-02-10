@@ -15,15 +15,31 @@ namespace ECommerceApp.BusinessLayer.Modules.Categories
             _categoryRepository = categoryRepository;
         }
 
-        public async Task<bool> CreateCategoryAsync(Category category)
+        public async Task<IReadOnlyList<Category>> GetAllAsync()
         {
-
-            return await _categoryRepository.AddCategory(category);
-            //category.CreatedDate = DateTime.Now;
-            //Category category1 = _context.Categories.FirstOrDefault(m => m.Name == category.Name);
+            return await _categoryRepository.GetAllAsync();
         }
 
+        public async Task<Category?> GetByIdAsync(int id)
+        {
+            return await _categoryRepository.GetByIdAsync(id);
+        }
 
+        public async Task<Category> AddAsync(Category category)
+        {
+            category.CreatedDate = DateTime.Now;
+            return await _categoryRepository.AddAsync(category);
+        }
+
+        public async Task UpdateAsync(Category category)
+        {
+            await _categoryRepository.UpdateAsync(category);
+        }
+
+        public async Task<bool> DeleteAsync(Category category)
+        {
+            return await _categoryRepository.DeleteAsync(category);
+        }
 
     }
 }

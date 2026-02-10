@@ -32,12 +32,12 @@ namespace ECommerceApp.Controllers
                 return View();
             }
 
-            var result = await _categoryViewModelProvider.CreateCategoryAsync(category);
+            //var result = await _categoryViewModelProvider.CreateCategoryAsync(category);
 
-            if (!result.Success)
-            {
-                category.ErrorMessage = result.ErrorMessage;
-            }
+            //if (!result.Success)
+            //{
+            //    category.ErrorMessage = result.ErrorMessage;
+            //}
 
 
             return View(category);

@@ -13,16 +13,63 @@ namespace ECommerceApp.PresentationLayer.Modules.Categories
         {
             _categoryService = categoryService;
         }
-        public async Task<(bool Success, string? ErrorMessage)> CreateCategoryAsync(CategoryCreateViewModel categoryCreateViewModel)
+
+        public async Task<IReadOnlyList<CategoryListViewModel>> GetAllAsync()
         {
-
-            Category category = new Category();
-            category.Name = categoryCreateViewModel.Name;
-            category.Description = categoryCreateViewModel.Description;
-
-            bool isCreated = await _categoryService.CreateCategoryAsync(category);
-            return (isCreated, null);
+            var categoryList = await _categoryService.GetAllAsync();
+            return categoryList.Select(c => new CategoryListViewModel
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Description = c.Description,
+            }).ToList();
 
         }
+
+        public async Task<CategoryEditViewModel?> GetByIdAsync(int id)
+        {
+            var category = await _categoryService.GetByIdAsync(id);
+            if (category == null) return null;
+
+            return new CategoryEditViewModel
+            {
+                Id = category.Id,
+                Name = category.Name,
+                Description = category.Description
+            };
+
+        }
+
+        public async Task<Category> AddAsync(CategoryCreateViewModel categoryVm)
+        {
+            Category category = new Category();
+            category.Name = categoryVm.Name;
+            category.Description = categoryVm.Description;
+            await _categoryService.AddAsync(category);
+            return category;
+        }
+
+        public async Task UpdateAsync(CategoryEditViewModel categoryVm)
+        {
+            Category category = new Category();
+            category.Id = categoryVm.Id;
+            category.Name = categoryVm.Name;
+            category.Description = categoryVm.Description;
+            category.CreatedDate = categoryVm.CreatedDate;
+
+            await _categoryService.UpdateAsync(category);
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var category = await _categoryService.GetByIdAsync(id);
+            if (category == null)
+            {
+                return false;
+            }
+
+            return await _categoryService.DeleteAsync(category);
+        }
+
     }
 }

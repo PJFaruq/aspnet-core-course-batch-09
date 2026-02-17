@@ -9,5 +9,6 @@ namespace ECommerceApp.DataAccessLayer.Modules.Categories.Interfaces
         Task<Category> AddAsync(Category category);
         Task UpdateAsync(Category category);
         Task<bool> DeleteAsync(Category category);
+        Task<bool> ExistsByNameAsync(string name, int? excludedId = null);
     }
 }

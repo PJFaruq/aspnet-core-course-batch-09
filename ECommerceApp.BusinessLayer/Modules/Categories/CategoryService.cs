@@ -1,4 +1,5 @@
-﻿using ECommerceApp.BusinessLayer.Modules.Categories.Interface;
+﻿using ECommerceApp.BusinessLayer.Exceptions;
+using ECommerceApp.BusinessLayer.Modules.Categories.Interface;
 using ECommerceApp.DataAccessLayer.Modules.Categories.Interfaces;
 using ECommerceApp.Domain.Entities;
 
@@ -28,6 +29,11 @@ namespace ECommerceApp.BusinessLayer.Modules.Categories
         public async Task<Category> AddAsync(Category category)
         {
             category.CreatedDate = DateTime.Now;
+            bool exists = await _categoryRepository.ExistsByNameAsync(category.Name);
+            if (exists)
+            {
+                throw new InvalidUserInputException("A Category with this name already exists.");
+            }
             return await _categoryRepository.AddAsync(category);
         }
 

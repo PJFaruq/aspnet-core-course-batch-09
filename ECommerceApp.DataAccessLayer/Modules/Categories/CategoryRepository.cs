@@ -27,6 +27,7 @@ namespace ECommerceApp.DataAccessLayer.Modules.Categories
             return await _context.SaveChangesAsync() > 0;
         }
 
+
         public async Task<IReadOnlyList<Category>> GetAllAsync()
         {
             return await _context.Categories
@@ -47,6 +48,23 @@ namespace ECommerceApp.DataAccessLayer.Modules.Categories
             _context.Categories.Update(category);
             await _context.SaveChangesAsync();
 
+        }
+
+        public async Task<bool> ExistsByNameAsync(string name, int? excludedId = null)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return false;
+            }
+
+            var query = _context.Categories.AsNoTracking().Where(c => c.Name.Trim().ToLower() == name.Trim().ToLower());
+
+            if (excludedId.HasValue)
+            {
+                query = query.Where(c => c.Id != excludedId.Value);
+            }
+
+            return await query.AnyAsync();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using ECommerceApp.PresentationLayer.Modules.Categories.Interfaces;
+﻿using ECommerceApp.BusinessLayer.Exceptions;
+using ECommerceApp.PresentationLayer.Modules.Categories.Interfaces;
 using ECommerceApp.PresentationLayer.Modules.Categories.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +14,12 @@ namespace ECommerceApp.Controllers
             _categoryViewModelProvider = categoryViewModelProvider;
         }
 
+        public async Task<IActionResult> Index()
+        {
+            var categories = await _categoryViewModelProvider.GetAllAsync();
+            return View(categories);
+        }
+
         //GET: Category/Create
 
         public IActionResult Create()
@@ -25,27 +32,38 @@ namespace ECommerceApp.Controllers
         public async Task<IActionResult> Create(CategoryCreateViewModel category)
         {
 
-
             //Server side validation
             if (!ModelState.IsValid)
             {
-                return View();
+                return View(category);
             }
 
-            //var result = await _categoryViewModelProvider.CreateCategoryAsync(category);
+            try
+            {
+                await _categoryViewModelProvider.AddAsync(category);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (InvalidUserInputException ex)
+            {
 
-            //if (!result.Success)
-            //{
-            //    category.ErrorMessage = result.ErrorMessage;
-            //}
+                ModelState.AddModelError(nameof(CategoryCreateViewModel.Name), ex.Message);
+                return View(category);
+            }
 
 
-            return View(category);
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Edit(int categoryId)
         {
-            return View();
+            var viewModel = await _categoryViewModelProvider.GetByIdAsync(categoryId);
+            if (viewModel == null)
+            {
+                return NotFound();
+            }
+
+            return View(viewModel);
+
+
         }
     }
 }

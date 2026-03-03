@@ -5,7 +5,6 @@ namespace ECommerceApp.Controllers
     public class ErrorController : Controller
     {
         [Route("Error/StatusCode")]
-        [HttpGet]
         public IActionResult StatusCode(int statusCode)
         {
             Response.StatusCode = statusCode;

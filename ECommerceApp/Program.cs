@@ -17,6 +17,8 @@ options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")
     ));
 
+builder.Services.AddAutoMapper(cfg => { }, typeof(CategoryMappingProfile).Assembly);
+
 builder.Services.AddScoped<ICategoryViewModelProvider, CategoryViewModelProvider>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 
@@ -25,7 +27,6 @@ builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 var app = builder.Build();
 
 app.UseStatusCodePagesWithReExecute("/Error/StatusCode", "?statusCode={0}");
-
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

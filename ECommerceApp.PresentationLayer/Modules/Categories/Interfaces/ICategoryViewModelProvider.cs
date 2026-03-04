@@ -1,4 +1,4 @@
-﻿using ECommerceApp.Domain.Entities;
+using ECommerceApp.Domain.Entities;
 using ECommerceApp.PresentationLayer.Modules.Categories.ViewModels;
 
 namespace ECommerceApp.PresentationLayer.Modules.Categories.Interfaces

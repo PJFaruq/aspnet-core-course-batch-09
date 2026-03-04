@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using ECommerceApp.BusinessLayer.Modules.Categories.Interface;
 using ECommerceApp.Domain.Entities;
 using ECommerceApp.PresentationLayer.Modules.Categories.Interfaces;
@@ -21,7 +21,6 @@ namespace ECommerceApp.PresentationLayer.Modules.Categories
         {
             var categoryList = await _categoryService.GetAllAsync();
             return _mapper.Map<IReadOnlyList<CategoryListViewModel>>(categoryList);
-
         }
 
         public async Task<CategoryEditViewModel?> GetByIdAsync(int id)

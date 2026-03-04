@@ -1,4 +1,4 @@
-﻿using ECommerceApp.Domain.Entities;
+using ECommerceApp.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceApp.DataAccessLayer.Data
@@ -11,6 +11,7 @@ namespace ECommerceApp.DataAccessLayer.Data
         }
 
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Product> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,6 +26,15 @@ namespace ECommerceApp.DataAccessLayer.Data
                         new Category { Id = 2, Name = "Cloths", Description = "This is Clothes", CreatedDate = new DateTime(2026, 01, 01) },
                         new Category { Id = 3, Name = "Books", Description = "This is Books", CreatedDate = new DateTime(2026, 01, 01) }
                 );
+
+            modelBuilder.Entity<Product>().ToTable("Product");
+
+            modelBuilder.Entity<Product>()
+                .HasOne(p => p.Category)
+                .WithMany(m => m.Products)
+                .HasForeignKey(p => p.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

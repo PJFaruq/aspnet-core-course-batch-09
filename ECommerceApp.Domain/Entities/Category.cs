@@ -18,6 +18,6 @@ namespace ECommerceApp.Domain.Entities
         public DateTime CreatedDate { get; set; }
 
         //Relationship: One category can have many Products
-        //public List<Product> Products { get; set; }
+        public List<Product> Products { get; set; }
     }
 }

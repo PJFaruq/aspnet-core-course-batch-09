@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using ECommerceApp.Domain.Entities;
 using ECommerceApp.PresentationLayer.Modules.Categories.ViewModels;
 

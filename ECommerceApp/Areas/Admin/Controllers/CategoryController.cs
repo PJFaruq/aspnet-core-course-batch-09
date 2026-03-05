@@ -1,10 +1,11 @@
-﻿using ECommerceApp.BusinessLayer.Exceptions;
+using ECommerceApp.BusinessLayer.Exceptions;
 using ECommerceApp.PresentationLayer.Modules.Categories.Interfaces;
 using ECommerceApp.PresentationLayer.Modules.Categories.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ECommerceApp.Controllers
+namespace ECommerceApp.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
         private readonly ICategoryViewModelProvider _categoryViewModelProvider;
@@ -53,9 +54,9 @@ namespace ECommerceApp.Controllers
 
         }
 
-        public async Task<IActionResult> Edit(int categoryId)
+        public async Task<IActionResult> Edit(int id)
         {
-            var viewModel = await _categoryViewModelProvider.GetByIdAsync(categoryId);
+            var viewModel = await _categoryViewModelProvider.GetByIdAsync(id);
             if (viewModel == null)
             {
                 return NotFound();

@@ -27,6 +27,6 @@
     <form asp-action="DeleteConfirm" method="post" class="mt-4">
         <input type="hidden" asp-for="Id" />
         <button type="submit" class="btn btn-category-danger">Delete</button>
-        <a asp-action="Index" class="btn btn-category-outline ms-2">Cancel</a>
+        <a asp-area="Admin" asp-controller="Category" asp-action="Index" class="btn btn-category-outline ms-2">Cancel</a>
     </form>
 </div>

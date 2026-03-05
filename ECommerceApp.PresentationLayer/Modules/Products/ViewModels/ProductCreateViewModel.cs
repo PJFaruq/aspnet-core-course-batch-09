@@ -24,6 +24,9 @@ namespace ECommerceApp.PresentationLayer.Modules.Products.ViewModels
         [Display(Name = "SKU")]
         public string SKU { get; set; } = string.Empty;
 
+        [Display(Name = "Product Image")]
+        public string? ImagePath { get; set; }
+
         [Required(ErrorMessage = "Category is required")]
         [Display(Name = "Category")]
         public int CategoryId { get; set; }

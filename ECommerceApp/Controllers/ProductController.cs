@@ -11,11 +11,13 @@ namespace ECommerceApp.Controllers
     {
         private readonly IProductViewModelProvider _productViewModelProvider;
         private readonly ICategoryViewModelProvider _categoryViewModelProvider;
+        private readonly IWebHostEnvironment _env;
 
-        public ProductController(IProductViewModelProvider productViewModelProvider, ICategoryViewModelProvider categoryViewModelProvider)
+        public ProductController(IProductViewModelProvider productViewModelProvider, ICategoryViewModelProvider categoryViewModelProvider, IWebHostEnvironment env)
         {
             _productViewModelProvider = productViewModelProvider;
             _categoryViewModelProvider = categoryViewModelProvider;
+            _env = env;
         }
 
         public async Task<IActionResult> Index()
@@ -33,7 +35,7 @@ namespace ECommerceApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ProductCreateViewModel product)
+        public async Task<IActionResult> Create(ProductCreateViewModel product, IFormFile? imageFile)
         {
             if (!ModelState.IsValid)
             {
@@ -41,6 +43,8 @@ namespace ECommerceApp.Controllers
                 ViewBag.Categories = new SelectList(categories, "Id", "Name");
                 return View(product);
             }
+
+            product.ImagePath = await SaveProductImageAsync(imageFile);
 
             try
             {
@@ -54,6 +58,42 @@ namespace ECommerceApp.Controllers
                 ViewBag.Categories = new SelectList(categories, "Id", "Name");
                 return View(product);
             }
+        }
+
+        private async Task<string?> SaveProductImageAsync(IFormFile? imageFile, string? oldPath = null)
+        {
+            if (imageFile == null || imageFile.Length == 0)
+            {
+                return oldPath;
+            }
+
+            var allowed = new[] { ".jpg", ".jpeg", "png" };
+            var ext = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
+            if (string.IsNullOrEmpty(ext) || !allowed.Contains(ext))
+            {
+                return oldPath;
+            }
+
+            var dir = Path.Combine(_env.WebRootPath, "Images", "products");
+            Directory.CreateDirectory(dir);
+            var fileName = $"{Guid.NewGuid():N}{ext}";
+            var fullPath = Path.Combine(dir, fileName);
+
+            using (var stream = new FileStream(fullPath, FileMode.Create))
+            {
+                await imageFile.CopyToAsync(stream);
+            }
+
+            if (!string.IsNullOrEmpty(oldPath))
+            {
+                var oldFull = Path.Combine(_env.WebRootPath, oldPath.TrimStart('/'));
+                if (System.IO.File.Exists(oldFull))
+                {
+                    System.IO.File.Delete(oldFull);
+                }
+            }
+
+            return "/images/products/" + fileName;
         }
 
         public async Task<IActionResult> Edit(int productId)
@@ -71,7 +111,7 @@ namespace ECommerceApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ProductEditViewModel viewModel)
+        public async Task<IActionResult> Edit(int id, ProductEditViewModel viewModel, IFormFile? imageFile)
         {
             if (id != viewModel.Id)
             {
@@ -84,6 +124,8 @@ namespace ECommerceApp.Controllers
                 ViewBag.Categories = new SelectList(categories, "Id", "Name");
                 return View(viewModel);
             }
+
+            viewModel.ImagePath = await SaveProductImageAsync(imageFile, viewModel.ImagePath);
 
             try
             {

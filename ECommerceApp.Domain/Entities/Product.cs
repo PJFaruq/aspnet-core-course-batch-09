@@ -21,6 +21,9 @@ namespace ECommerceApp.Domain.Entities
         [StringLength(50)]
         public string SKU { get; set; }
 
+        [StringLength(500)]
+        public string? ImagePath { get; set; }
+
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
 

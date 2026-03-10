@@ -1,8 +1,8 @@
+using ECommerceApp.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerceApp.Areas.Admin.Controllers
 {
-    [Area("Admin")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -14,7 +14,7 @@ namespace ECommerceApp.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction(nameof(StoreController.Index), "Store");
         }
 
     }

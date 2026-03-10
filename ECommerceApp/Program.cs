@@ -1,13 +1,19 @@
 
+using ECommerceApp.BusinessLayer.Modules.Carts;
+using ECommerceApp.BusinessLayer.Modules.Carts.Interfaces;
 using ECommerceApp.BusinessLayer.Modules.Categories;
 using ECommerceApp.BusinessLayer.Modules.Categories.Interface;
 using ECommerceApp.BusinessLayer.Modules.Products;
 using ECommerceApp.BusinessLayer.Modules.Products.Interface;
 using ECommerceApp.DataAccessLayer.Data;
+using ECommerceApp.DataAccessLayer.Modules.Carts;
+using ECommerceApp.DataAccessLayer.Modules.Carts.Inerfaces;
 using ECommerceApp.DataAccessLayer.Modules.Categories;
 using ECommerceApp.DataAccessLayer.Modules.Categories.Interfaces;
 using ECommerceApp.DataAccessLayer.Modules.Products;
 using ECommerceApp.DataAccessLayer.Modules.Products.Interfaces;
+using ECommerceApp.PresentationLayer.Modules.Carts;
+using ECommerceApp.PresentationLayer.Modules.Carts.Interfaces;
 using ECommerceApp.PresentationLayer.Modules.Categories;
 using ECommerceApp.PresentationLayer.Modules.Categories.Interfaces;
 using ECommerceApp.PresentationLayer.Modules.Products;
@@ -25,6 +31,16 @@ options.UseSqlServer(
 
 builder.Services.AddAutoMapper(cfg => { }, typeof(CategoryMappingProfile).Assembly);
 
+//Session related services
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(20);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddScoped<ICategoryViewModelProvider, CategoryViewModelProvider>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
@@ -32,6 +48,10 @@ builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductViewModelProvider, ProductViewModelProvider>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
+
+builder.Services.AddScoped<ICartRepository, SessionCartRepository>();
+builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<ICartViewModelProvider, CartViewModelProvider>();
 
 var app = builder.Build();
 
@@ -48,6 +68,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseSession();
 
 app.UseAuthorization();
 

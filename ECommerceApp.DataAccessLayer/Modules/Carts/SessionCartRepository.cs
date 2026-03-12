@@ -17,6 +17,8 @@ namespace ECommerceApp.DataAccessLayer.Modules.Carts
 
         private ISession Session => _httpContextAccessor.HttpContext!.Session;
 
+
+
         public Cart GetCart()
         {
             if (Session.TryGetValue(CartSessionKey, out byte[]? bytes) && bytes != null && bytes.Length > 0)
@@ -35,6 +37,11 @@ namespace ECommerceApp.DataAccessLayer.Modules.Carts
             var json = JsonSerializer.Serialize(cart);
             var encoded = Encoding.UTF8.GetBytes(json);
             Session.Set(CartSessionKey, encoded);
+        }
+
+        public void ClearCart()
+        {
+            Session.Remove(CartSessionKey);
         }
     }
 }

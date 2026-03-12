@@ -3,7 +3,7 @@
     public class Order
     {
         public int Id { get; set; }           // Primary Key
-        public int CustomerId { get; set; }   // Foreign Key to Customer
+        public int? CustomerId { get; set; }   // Foreign Key to Customer
         public DateTime OrderDate { get; set; }
         public decimal TotalAmount { get; set; }
         public string Status { get; set; }

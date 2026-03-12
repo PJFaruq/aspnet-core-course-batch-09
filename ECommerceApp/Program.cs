@@ -3,6 +3,8 @@ using ECommerceApp.BusinessLayer.Modules.Carts;
 using ECommerceApp.BusinessLayer.Modules.Carts.Interfaces;
 using ECommerceApp.BusinessLayer.Modules.Categories;
 using ECommerceApp.BusinessLayer.Modules.Categories.Interface;
+using ECommerceApp.BusinessLayer.Modules.Orders;
+using ECommerceApp.BusinessLayer.Modules.Orders.Interfaces;
 using ECommerceApp.BusinessLayer.Modules.Products;
 using ECommerceApp.BusinessLayer.Modules.Products.Interface;
 using ECommerceApp.DataAccessLayer.Data;
@@ -10,12 +12,16 @@ using ECommerceApp.DataAccessLayer.Modules.Carts;
 using ECommerceApp.DataAccessLayer.Modules.Carts.Inerfaces;
 using ECommerceApp.DataAccessLayer.Modules.Categories;
 using ECommerceApp.DataAccessLayer.Modules.Categories.Interfaces;
+using ECommerceApp.DataAccessLayer.Modules.Orders;
+using ECommerceApp.DataAccessLayer.Modules.Orders.Interfaces;
 using ECommerceApp.DataAccessLayer.Modules.Products;
 using ECommerceApp.DataAccessLayer.Modules.Products.Interfaces;
 using ECommerceApp.PresentationLayer.Modules.Carts;
 using ECommerceApp.PresentationLayer.Modules.Carts.Interfaces;
 using ECommerceApp.PresentationLayer.Modules.Categories;
 using ECommerceApp.PresentationLayer.Modules.Categories.Interfaces;
+using ECommerceApp.PresentationLayer.Modules.Orders;
+using ECommerceApp.PresentationLayer.Modules.Orders.Interfaces;
 using ECommerceApp.PresentationLayer.Modules.Products;
 using ECommerceApp.PresentationLayer.Modules.Products.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -52,6 +58,10 @@ builder.Services.AddTransient<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICartRepository, SessionCartRepository>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<ICartViewModelProvider, CartViewModelProvider>();
+
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<ICheckoutViewModelProvider, CheckoutViewModelProvider>();
 
 var app = builder.Build();
 

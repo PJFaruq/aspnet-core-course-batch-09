@@ -39,6 +39,7 @@ namespace ECommerceApp.BusinessLayer.Modules.Carts
         }
 
 
+
         public Cart GetCart() => _cartRepository.GetCart();
 
         public void RemoveItem(int productId)
@@ -62,6 +63,11 @@ namespace ECommerceApp.BusinessLayer.Modules.Carts
             else
                 item.Quantity = quantity;
             _cartRepository.SaveCart(cart);
+        }
+
+        public void ClearCart()
+        {
+            _cartRepository.ClearCart();
         }
     }
 }

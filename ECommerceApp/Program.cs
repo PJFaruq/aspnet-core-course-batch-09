@@ -8,6 +8,7 @@ using ECommerceApp.BusinessLayer.Modules.Orders.Interfaces;
 using ECommerceApp.BusinessLayer.Modules.Products;
 using ECommerceApp.BusinessLayer.Modules.Products.Interface;
 using ECommerceApp.DataAccessLayer.Data;
+using ECommerceApp.DataAccessLayer.Identity;
 using ECommerceApp.DataAccessLayer.Modules.Carts;
 using ECommerceApp.DataAccessLayer.Modules.Carts.Inerfaces;
 using ECommerceApp.DataAccessLayer.Modules.Categories;
@@ -24,6 +25,7 @@ using ECommerceApp.PresentationLayer.Modules.Orders;
 using ECommerceApp.PresentationLayer.Modules.Orders.Interfaces;
 using ECommerceApp.PresentationLayer.Modules.Products;
 using ECommerceApp.PresentationLayer.Modules.Products.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -46,6 +48,18 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+{
+    options.Password.RequiredLength = 6;
+    options.Password.RequireDigit = true;
+    options.Password.RequireUppercase = true;
+    options.User.RequireUniqueEmail = true;
+})
+.AddEntityFrameworkStores<ECommerceDbContext>()
+.AddDefaultTokenProviders();
+
+builder.Services.AddScoped<IdentityRoleSeeder>();
 
 builder.Services.AddScoped<ICategoryViewModelProvider, CategoryViewModelProvider>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
@@ -80,6 +94,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseSession();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
@@ -89,5 +104,11 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+using (var scope = app.Services.CreateScope())
+{
+    var seed = scope.ServiceProvider.GetRequiredService<IdentityRoleSeeder>();
+    await seed.SeedAsync();
+}
 
 app.Run();

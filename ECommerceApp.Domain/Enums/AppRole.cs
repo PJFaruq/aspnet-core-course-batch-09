@@ -3,6 +3,7 @@
     public enum AppRole
     {
         Admin,
-        Customer
+        Customer,
+        SuperAdmin
     }
 }

@@ -2,12 +2,14 @@ using ECommerceApp.BusinessLayer.Exceptions;
 using ECommerceApp.PresentationLayer.Modules.Categories.Interfaces;
 using ECommerceApp.PresentationLayer.Modules.Products.Interfaces;
 using ECommerceApp.PresentationLayer.Modules.Products.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ECommerceApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "SuperAdmin,Admin")]
     public class ProductController : Controller
     {
         private readonly IProductViewModelProvider _productViewModelProvider;

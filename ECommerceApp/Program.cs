@@ -61,6 +61,16 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 
 builder.Services.AddScoped<IdentityRoleSeeder>();
 
+//Creating Policy
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("FullNameOnly", policy => policy.RequireClaim("FullName", "Super Admin")
+                                                       .RequireRole("SuperAdmin"));
+
+});
+
+
+
 builder.Services.AddScoped<ICategoryViewModelProvider, CategoryViewModelProvider>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();

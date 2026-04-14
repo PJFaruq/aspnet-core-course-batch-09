@@ -69,6 +69,12 @@ builder.Services.AddAuthorization(options =>
 
 });
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.AccessDeniedPath = "/Error/Unauthorized";
+});
+
 
 
 builder.Services.AddScoped<ICategoryViewModelProvider, CategoryViewModelProvider>();

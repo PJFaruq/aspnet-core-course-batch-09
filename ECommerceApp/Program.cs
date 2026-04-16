@@ -27,8 +27,21 @@ using ECommerceApp.PresentationLayer.Modules.Products;
 using ECommerceApp.PresentationLayer.Modules.Products.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Logging related configuration
+//builder.Logging.ClearProviders();
+//builder.Logging.AddDebug();
+//builder.Logging.AddConsole();
+
+//Serilog Configuration
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/log_.txt", rollingInterval: RollingInterval.Day, outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {SourceContext} {Message:lj}{NewLine}{Exception}")
+    .CreateLogger();
+builder.Services.AddSerilog();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -94,6 +107,15 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ICheckoutViewModelProvider, CheckoutViewModelProvider>();
 
 var app = builder.Build();
+
+//Logging related code
+app.Logger.LogTrace("This is trace log");
+app.Logger.Log(LogLevel.Debug, "This is Debug log");
+app.Logger.LogInformation("This is Information log");
+app.Logger.LogWarning("This is warning log");
+app.Logger.LogError("This is error log");
+app.Logger.LogCritical("This is Critical log");
+
 
 app.UseStatusCodePagesWithReExecute("/Error/StatusCode", "?statusCode={0}");
 // Configure the HTTP request pipeline.

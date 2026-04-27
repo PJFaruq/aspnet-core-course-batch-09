@@ -4,95 +4,109 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+//Swagger configuration
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddControllers();
+
 var app = builder.Build();
 
-var products = new List<Product>
-{
-    new Product { Id = 1, Name = "Laptop", Price = 1000 },
-    new Product { Id = 2, Name = "Phone", Price = 500 },
-    new Product { Id = 3, Name = "Book", Price = 1500 },
+//var products = new List<Product>
+//{
+//    new Product { Id = 1, Name = "Laptop", Price = 1000 },
+//    new Product { Id = 2, Name = "Phone", Price = 500 },
+//    new Product { Id = 3, Name = "Book", Price = 1500 },
 
-};
+//};
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
+
+
 app.UseHttpsRedirection();
+app.UseRouting();
 
-//Get All products
-app.MapGet("/products", () =>
-{
-    return products;
-});
+#region Minimal API
 
-//Get By Id
-app.MapGet("/products/{id}", (int id) =>
-{
-    var product = products.FirstOrDefault(p => p.Id == id);
-    return product;
-});
+////Get All products
+//app.MapGet("/products", () =>
+//{
+//    return products;
+//});
 
-//Post
-app.MapPost("/products", (Product product) =>
-{
-    product.Id = products.Max(p => p.Id) + 1;
-    products.Add(product);
-    return product;
+////Get By Id
+//app.MapGet("/products/{id}", (int id) =>
+//{
+//    var product = products.FirstOrDefault(p => p.Id == id);
+//    return product;
+//});
 
-});
+////Post
+//app.MapPost("/products", (Product product) =>
+//{
+//    product.Id = products.Max(p => p.Id) + 1;
+//    products.Add(product);
+//    return product;
 
-//PUT
-app.MapPut("/products/{id}", (int id,Product updatedProduct) =>
-{
-    var product = products.FirstOrDefault(p => p.Id == id);
-    if (product is null) return null;
+//});
 
-    product.Name = updatedProduct.Name;
-    product.Price = updatedProduct.Price;
-    return product;
-});
+////PUT
+//app.MapPut("/products/{id}", (int id,Product updatedProduct) =>
+//{
+//    var product = products.FirstOrDefault(p => p.Id == id);
+//    if (product is null) return null;
 
-//PUT
-app.MapPatch("/products/{id}", (int id, Product updatedProduct) =>
-{
-    var product = products.FirstOrDefault(p => p.Id == id);
-    if (product is null) return null;
+//    product.Name = updatedProduct.Name;
+//    product.Price = updatedProduct.Price;
+//    return product;
+//});
 
-    if (!string.IsNullOrEmpty(updatedProduct.Name))
-    {
-        product.Name = updatedProduct.Name;
-    }
+////PUT
+//app.MapPatch("/products/{id}", (int id, Product updatedProduct) =>
+//{
+//    var product = products.FirstOrDefault(p => p.Id == id);
+//    if (product is null) return null;
 
-    if (updatedProduct.Price > 0)
-    {
-        product.Price = updatedProduct.Price;
-    }
-    
-    return product;
-});
+//    if (!string.IsNullOrEmpty(updatedProduct.Name))
+//    {
+//        product.Name = updatedProduct.Name;
+//    }
 
-app.MapDelete("/products/{id}", (int id) =>
-{
-    var product = products.FirstOrDefault(p => p.Id == id);
-    if (product is null) return null;
+//    if (updatedProduct.Price > 0)
+//    {
+//        product.Price = updatedProduct.Price;
+//    }
 
-    products.Remove(product);
+//    return product;
+//});
 
-    return products;
-});
+//app.MapDelete("/products/{id}", (int id) =>
+//{
+//    var product = products.FirstOrDefault(p => p.Id == id);
+//    if (product is null) return null;
 
+//    products.Remove(product);
 
+//    return products;
+//});
 
+#endregion
+
+app.MapControllers();
 
 app.Run();
 
 
-public class Product
-{
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public decimal Price { get; set; }
-}
+//public class Product
+//{
+//    public int Id { get; set; }
+//    public string Name { get; set; }
+//    public decimal Price { get; set; }
+//}

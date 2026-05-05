@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ECommerce.API.Controllers
 {
 
-    [ApiController]
+    //[ApiController]
     [Route("api/[controller]")]
     public class ProductsController:ControllerBase
     {
@@ -18,7 +18,7 @@ namespace ECommerce.API.Controllers
 
         [HttpGet]
 
-        public List<Product> GetAll()
+        public List<Product> GetAll(string name,string age, string department)
         {
             return products;
         }
@@ -33,7 +33,7 @@ namespace ECommerce.API.Controllers
 
         [HttpPost]
 
-        public Product Create(Product product)
+        public Product Create([FromHeader] Product product)
         {
             product.Id = products.Max(p => p.Id) + 1;
             products.Add(product);

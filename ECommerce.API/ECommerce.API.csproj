@@ -11,4 +11,11 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ECommerceApp.BusinessLayer\ECommerceApp.BusinessLayer.csproj" />
+    <ProjectReference Include="..\ECommerceApp.DataAccessLayer\ECommerceApp.DataAccessLayer.csproj" />
+    <ProjectReference Include="..\ECommerceApp.Domain\ECommerceApp.Domain.csproj" />
+    <ProjectReference Include="..\ECommerceApp.PresentationLayer\ECommerceApp.PresentationLayer.csproj" />
+  </ItemGroup>
+
 </Project>

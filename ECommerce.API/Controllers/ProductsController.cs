@@ -18,8 +18,9 @@ namespace ECommerce.API.Controllers
 
         [HttpGet]
 
-        public List<Product> GetAll(string name,string age, string department)
+        public List<Product> GetAll()
         {
+            throw new Exception("Database connection failed");
             return products;
         }
 

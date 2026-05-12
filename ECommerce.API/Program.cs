@@ -1,3 +1,4 @@
+using ECommerce.API.Middlewares;
 using ECommerceApp.BusinessLayer.Modules.Carts;
 using ECommerceApp.BusinessLayer.Modules.Carts.Interfaces;
 using ECommerceApp.BusinessLayer.Modules.Categories;
@@ -62,6 +63,8 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 })
 .AddEntityFrameworkStores<ECommerceDbContext>()
 .AddDefaultTokenProviders();
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddScoped<IdentityRoleSeeder>();
 
@@ -172,6 +175,8 @@ app.UseSession();
 //});
 
 #endregion
+
+app.UseExceptionHandler(options => { });
 
 app.MapControllers();
 

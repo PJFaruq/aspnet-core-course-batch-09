@@ -28,7 +28,8 @@ namespace ECommerce.API.Controllers.Admin
             var vm= await _categoryViewModelProvider.GetByIdAsync(id);
             if(vm == null)
             {
-                return NotFound();
+                throw new Exception("Id not found");
+                //return NotFound();
             }
             return Ok(vm);
         }

@@ -25,10 +25,19 @@ using ECommerceApp.PresentationLayer.Modules.Orders;
 using ECommerceApp.PresentationLayer.Modules.Orders.Interfaces;
 using ECommerceApp.PresentationLayer.Modules.Products;
 using ECommerceApp.PresentationLayer.Modules.Products.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+var jwtAudience = builder.Configuration["Jwt:Audience"];
+var jwtKey = builder.Configuration["Jwt:Key"];
+
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -37,6 +46,7 @@ builder.Services.AddOpenApi();
 //Swagger configuration
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ECommerceDbContext>(options =>
@@ -63,6 +73,29 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 })
 .AddEntityFrameworkStores<ECommerceDbContext>()
 .AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidIssuer = jwtIssuer,
+
+        ValidateAudience = true,
+        ValidAudience = jwtAudience,
+
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero,
+
+        ValidateIssuerSigningKey =true,
+        IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+    };
+
+});
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
@@ -109,6 +142,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseSession();
+app.UseAuthentication();
+app.UseAuthorization();
 
 #region Minimal API
 

@@ -1,12 +1,14 @@
 ﻿using ECommerceApp.BusinessLayer.Exceptions;
 using ECommerceApp.PresentationLayer.Modules.Categories.Interfaces;
 using ECommerceApp.PresentationLayer.Modules.Categories.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.API.Controllers.Admin
 {
     [ApiController]
     [Route("api/admin/[controller]")]
+    [Authorize(Roles ="SuperAdmin,Admin")]
     public class CategoriesController:ControllerBase
     {
         private readonly ICategoryViewModelProvider _categoryViewModelProvider;

@@ -58,6 +58,64 @@ namespace ECommerce.API.Controllers.Public
 
         }
 
+        [HttpPost("register")]
+        public async Task<ActionResult<LoginResponse>> Register([FromBody] Models.Auth.RegisterRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.FullName) 
+                || string.IsNullOrWhiteSpace(request.Password) 
+                || string.IsNullOrWhiteSpace(request.Email))
+            {
+                return BadRequest(new { message = "FullName, Password, Email are required" });
+            }
+
+            if (!string.Equals(request.Password, request.ConfirmPassword, StringComparison.Ordinal))
+            {
+                return BadRequest(new { message = "Password and Confirm Password do not match" });
+            }
+
+            var existingMail = await _userManager.FindByEmailAsync(request.Email);
+            if (existingMail != null) 
+            {
+                return BadRequest(new { message = "Email is already exist" });
+            }
+
+            var user = new ApplicationUser
+            {
+                UserName = request.Email,
+                Email = request.Email,
+                FullName = request.FullName
+            };
+
+            var isCreated= await _userManager.CreateAsync(user,request.Password);
+            if (!isCreated.Succeeded)
+            {
+                return BadRequest(new { message = "Registration failed !" });
+            }
+
+            var roleResult = await _userManager.AddToRoleAsync(user, "Customer");
+            if (!roleResult.Succeeded)
+            {
+                return BadRequest(new { message = "Could not assign customer role." });
+            }
+
+            var claimResult = await _userManager.AddClaimAsync(user, new Claim("FullName",user.FullName));
+            if (!claimResult.Succeeded)
+            {
+                return BadRequest(new { message = "Could not add FullName claim." });
+            }
+
+            string tokenString = await GenerateJwtToken(user);
+
+            var expiresMinutes = int.TryParse(_config["Jwt:ExpireMinutes"], out var m) ? m : 60;
+
+            return Ok(new LoginResponse
+            {
+                AccessToken = tokenString,
+                ExpiresIn = expiresMinutes * 60
+            });
+
+        }
+
         private async Task<string> GenerateJwtToken(ApplicationUser user)
         {
             var jwtIssuer = _config["Jwt:Issuer"];

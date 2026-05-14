@@ -1,10 +1,13 @@
-﻿using ECommerce.API.Models;
+﻿using Asp.Versioning;
+using ECommerce.API.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ECommerce.API.Controllers
+namespace ECommerce.API.Controllers.Versioning.V1
 {
 
-    //[ApiController]
+    [ApiController]
+    [ApiVersion("1.0",Deprecated =true)]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [Route("api/[controller]")]
     public class ProductsController:ControllerBase
     {
@@ -17,11 +20,11 @@ namespace ECommerce.API.Controllers
                     };
 
         [HttpGet]
-
-        public List<Product> GetAll()
+        public ActionResult GetAll()
         {
-            throw new Exception("Database connection failed");
-            return products;
+            //throw new Exception("Database connection failed");
+
+            return Ok("This is version 1");
         }
 
         [HttpGet("{id}")]

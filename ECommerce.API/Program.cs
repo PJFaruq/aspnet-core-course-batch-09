@@ -1,3 +1,6 @@
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
+using ECommerce.API.Configurations.Swagger;
 using ECommerce.API.Middlewares;
 using ECommerceApp.BusinessLayer.Modules.Carts;
 using ECommerceApp.BusinessLayer.Modules.Carts.Interfaces;
@@ -28,8 +31,10 @@ using ECommerceApp.PresentationLayer.Modules.Products.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -46,6 +51,7 @@ builder.Services.AddOpenApi();
 //Swagger configuration
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
 
 builder.Services.AddControllers();
@@ -97,6 +103,20 @@ builder.Services.AddAuthentication(options =>
 
 });
 
+//API Versioning related code
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+}).AddApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'VVV";
+    options.SubstituteApiVersionInUrl = true;
+});
+
+
+
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddScoped<IdentityRoleSeeder>();
@@ -119,6 +139,8 @@ builder.Services.AddScoped<ICheckoutViewModelProvider, CheckoutViewModelProvider
 
 var app = builder.Build();
 
+var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+
 #region Minimal API dummy data
 //var products = new List<Product>
 //{
@@ -134,7 +156,14 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        foreach (var description in provider.ApiVersionDescriptions)
+        {
+            options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
+                description.GroupName.ToUpperInvariant());
+        }
+    });
 }
 
 
